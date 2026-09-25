@@ -4,7 +4,7 @@ import AppKit
 import ServiceManagement
 
 @main
-struct FastfetchWidgetHostApp: App {
+struct DeskFetchApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
@@ -35,7 +35,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func setupStatusItem() {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        item.button?.image = NSImage(systemSymbolName: "terminal", accessibilityDescription: "Fastfetch Widget")
+        item.button?.image = NSImage(systemSymbolName: "terminal", accessibilityDescription: "deskFetch")
 
         let menu = NSMenu()
         let refreshItem = NSMenuItem(title: "Refresh Now", action: #selector(refreshNow), keyEquivalent: "r")

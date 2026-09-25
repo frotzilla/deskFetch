@@ -1,5 +1,5 @@
 #!/bin/bash
-# Builds FastfetchWidgetHost.app and optionally installs it to /Applications.
+# Builds deskFetch.app and optionally installs it to /Applications.
 #
 #   ./build.sh              build only, output in ./build/
 #   ./build.sh --install    build, then install to /Applications and relaunch
@@ -31,29 +31,29 @@ echo "==> Generating Xcode project"
 xcodegen generate
 
 echo "==> Building ($CONFIG)"
-xcodebuild -project FastfetchWidget.xcodeproj \
-           -scheme FastfetchWidgetHost \
+xcodebuild -project deskFetch.xcodeproj \
+           -scheme deskFetch \
            -configuration "$CONFIG" \
            -derivedDataPath build/DerivedData \
            -allowProvisioningUpdates \
            build
 
-APP="build/DerivedData/Build/Products/$CONFIG/FastfetchWidgetHost.app"
+APP="build/DerivedData/Build/Products/$CONFIG/deskFetch.app"
 [[ -d "$APP" ]] || { echo "error: build succeeded but $APP is missing" >&2; exit 1; }
 echo "==> Built $APP"
 
 if [[ "$INSTALL" == true ]]; then
-  EXT="/Applications/FastfetchWidgetHost.app/Contents/PlugIns/FastfetchWidgetExtension.appex"
+  EXT="/Applications/deskFetch.app/Contents/PlugIns/deskFetchWidget.appex"
   echo "==> Installing to /Applications"
-  pkill -f FastfetchWidgetHost 2>/dev/null || true
+  pkill -f deskFetch 2>/dev/null || true
   sleep 1
   pluginkit -r "$EXT" 2>/dev/null || true
-  rm -rf /Applications/FastfetchWidgetHost.app
+  rm -rf /Applications/deskFetch.app
   cp -R "$APP" /Applications/
-  pluginkit -a "/Applications/FastfetchWidgetHost.app/Contents/PlugIns/FastfetchWidgetExtension.appex" 2>/dev/null || true
+  pluginkit -a "/Applications/deskFetch.app/Contents/PlugIns/deskFetchWidget.appex" 2>/dev/null || true
   # macOS caches the widget gallery aggressively; nudge it.
   killall chronod NotificationCenter 2>/dev/null || true
-  open /Applications/FastfetchWidgetHost.app
+  open /Applications/deskFetch.app
   echo "==> Installed and launched."
-  echo "    Add widgets: right-click the desktop -> Edit Widgets -> search \"Fastfetch\""
+  echo "    Add widgets: right-click the desktop -> Edit Widgets -> search \"deskFetch\""
 fi

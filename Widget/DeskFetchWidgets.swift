@@ -28,7 +28,7 @@ struct FastfetchProvider: TimelineProvider {
         }
         return FastfetchEntry(
             date: Date(),
-            text: "FastfetchWidgetHost isn't running.\nLaunch it once to start updates."
+            text: "deskFetch isn't running.\nLaunch it once to start updates."
         )
     }
 }
@@ -67,15 +67,15 @@ struct FastfetchWidgetView: View {
     }
 }
 
-struct FastfetchWidget: Widget {
-    let kind: String = "FastfetchWidget"
+struct DeskFetchInfoWidget: Widget {
+    let kind: String = "DeskFetchInfo"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: FastfetchProvider()) { entry in
             FastfetchWidgetView(entry: entry)
         }
-        .configurationDisplayName("Fastfetch")
-        .description("Shows system info from fastfetch, refreshed by the FastfetchWidgetHost background app.")
+        .configurationDisplayName("deskFetch")
+        .description("System info from fastfetch, kept up to date by the deskFetch menu bar app.")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge])
     }
 }
@@ -97,7 +97,7 @@ struct FastfetchLogoProvider: TimelineProvider {
         if let text = LocalFastfetchClient.fetchSync(variant: "logo") {
             return FastfetchEntry(date: Date(), text: text)
         }
-        return FastfetchEntry(date: Date(), text: "Launch\nFastfetchWidgetHost")
+        return FastfetchEntry(date: Date(), text: "Launch\ndeskFetch")
     }
 }
 
@@ -293,14 +293,14 @@ struct FastfetchLogoWidgetView: View {
     }
 }
 
-struct FastfetchLogoWidget: Widget {
-    let kind: String = "FastfetchLogoWidget"
+struct DeskFetchLogoWidget: Widget {
+    let kind: String = "DeskFetchLogo"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: FastfetchLogoProvider()) { entry in
             FastfetchLogoWidgetView(entry: entry)
         }
-        .configurationDisplayName("Fastfetch Logo")
+        .configurationDisplayName("deskFetch Logo")
         .description("Just the ASCII logo from fastfetch.")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge])
     }
@@ -334,7 +334,7 @@ struct FastfetchComboProvider: TimelineProvider {
             return FastfetchComboEntry(
                 date: Date(),
                 logoText: "",
-                infoText: "FastfetchWidgetHost isn't running.\nLaunch it once to start updates."
+                infoText: "deskFetch isn't running.\nLaunch it once to start updates."
             )
         }
         return FastfetchComboEntry(date: Date(), logoText: logo, infoText: info)
@@ -387,60 +387,60 @@ struct FastfetchComboWidgetView: View {
     }
 }
 
-struct FastfetchComboWidget: Widget {
-    let kind: String = "FastfetchComboWidget"
+struct DeskFetchComboWidget: Widget {
+    let kind: String = "DeskFetchCombo"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: FastfetchComboProvider()) { entry in
             FastfetchComboWidgetView(entry: entry)
         }
-        .configurationDisplayName("Fastfetch Combo")
+        .configurationDisplayName("deskFetch Combo")
         .description("The classic layout: ASCII logo next to system info.")
         .supportedFamilies([.systemMedium, .systemLarge, .systemExtraLarge])
     }
 }
 
 @main
-struct FastfetchWidgetBundle: WidgetBundle {
+struct DeskFetchWidgetBundle: WidgetBundle {
     var body: some Widget {
-        FastfetchWidget()
-        FastfetchLogoWidget()
-        FastfetchComboWidget()
+        DeskFetchInfoWidget()
+        DeskFetchLogoWidget()
+        DeskFetchComboWidget()
     }
 }
 
 #Preview("Small", as: .systemSmall) {
-    FastfetchWidget()
+    DeskFetchInfoWidget()
 } timeline: {
     FastfetchEntry(date: .now, text: LocalFastfetchClient.fetchSync(variant: "compact") ?? "no data")
 }
 
 #Preview("Medium", as: .systemMedium) {
-    FastfetchWidget()
+    DeskFetchInfoWidget()
 } timeline: {
     FastfetchEntry(date: .now, text: LocalFastfetchClient.fetchSync(variant: "compact") ?? "no data")
 }
 
 #Preview("Large", as: .systemLarge) {
-    FastfetchWidget()
+    DeskFetchInfoWidget()
 } timeline: {
     FastfetchEntry(date: .now, text: LocalFastfetchClient.fetchSync(variant: "full") ?? "no data")
 }
 
 #Preview("Logo Small", as: .systemSmall) {
-    FastfetchLogoWidget()
+    DeskFetchLogoWidget()
 } timeline: {
     FastfetchEntry(date: .now, text: LocalFastfetchClient.fetchSync(variant: "logo") ?? "no data")
 }
 
 #Preview("Logo Large", as: .systemLarge) {
-    FastfetchLogoWidget()
+    DeskFetchLogoWidget()
 } timeline: {
     FastfetchEntry(date: .now, text: LocalFastfetchClient.fetchSync(variant: "logo") ?? "no data")
 }
 
 #Preview("Combo Medium", as: .systemMedium) {
-    FastfetchComboWidget()
+    DeskFetchComboWidget()
 } timeline: {
     FastfetchComboEntry(
         date: .now,
