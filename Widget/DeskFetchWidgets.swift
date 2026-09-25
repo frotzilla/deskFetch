@@ -116,7 +116,7 @@ private func stripAnsi(_ line: Substring) -> String {
 }
 
 /// Plain-text lines with ANSI codes removed, for measurement only.
-/// Never render this — it has no color information.
+/// Never render this - it has no color information.
 private func visibleLines(of text: String) -> [String] {
     var lines = text.split(separator: "\n", omittingEmptySubsequences: false).map(stripAnsi)
     // Drop trailing blank lines produced by a trailing newline in the source text.
