@@ -81,12 +81,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func refresh() {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             // Use whatever modules the user's own fastfetch config defines,
-            // minus the two that don't render usefully in a widget: "break"
-            // is a blank spacer line and "colors" is a block of coloured
-            // rectangles with no text.
+            // minus three that don't work in a widget: "break" is a blank
+            // spacer line, "colors" is a block of coloured rectangles with no
+            // text, and "shell" reports fastfetch's parent process - which
+            // here is this app, not the user's actual shell.
             let full = Self.runFastfetch(arguments: [
                 "--logo", "none", "--pipe", "false",
-                "--structure-disabled", "break:colors",
+                "--structure-disabled", "break:colors:shell",
             ])
             let compact = Self.runFastfetch(arguments: [
                 "--logo", "none", "--pipe", "false",

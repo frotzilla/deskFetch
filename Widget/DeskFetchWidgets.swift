@@ -352,11 +352,15 @@ struct FastfetchComboWidgetView: View {
 
         GeometryReader { outer in
             // Give the logo exactly the width its art needs at the scale that
-            // fits the height (capped at half the widget), so it sits at the
-            // left edge like the standalone logo widget instead of floating
-            // in the middle of a half-width column. The info side gets the
-            // rest of the width.
-            let logoScale = min((outer.size.width * 0.5) / max(logoNatural.width, 1),
+            // fits the height, so it sits at the left edge like the standalone
+            // logo widget instead of floating in the middle of a column. The
+            // info side gets the rest of the width.
+            //
+            // The width cap is what actually frees space for the text: at
+            // Medium and Extra Large the logo is otherwise height-constrained
+            // and eats width the info column needs. A third of the width also
+            // matches how fastfetch lays out in a real terminal.
+            let logoScale = min((outer.size.width * 0.30) / max(logoNatural.width, 1),
                                 outer.size.height / max(logoNatural.height, 1))
             let logoWidth = logoNatural.width * logoScale
 
