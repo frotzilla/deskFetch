@@ -44,6 +44,16 @@ the ones you want.
 macOS caches the widget gallery aggressively. If a widget or a size doesn't
 appear, remove and re-add it; if that fails, log out and back in.
 
+### If fastfetch isn't found
+
+deskFetch looks in the usual places (Homebrew on both architectures, MacPorts,
+Nix, `/usr/bin`) — an app launched from Finder gets a minimal `PATH`, so it
+can't just rely on that. If yours lives somewhere unusual, point at it directly:
+
+```bash
+defaults write com.redwanh.deskfetch fastfetchPath /path/to/fastfetch
+```
+
 ## How it works
 
 A WidgetKit extension is sandboxed and can't execute binaries, so a widget
@@ -55,8 +65,9 @@ can't run `fastfetch` itself. deskFetch is therefore two pieces:
 - **deskFetchWidget.appex** — the widgets. They fetch from that local endpoint
   and render it, parsing ANSI escape codes into colored SwiftUI text.
 
-The menu bar app has to be running for the widgets to update. It registers
-itself as a login item on first launch; quit it from the menu bar icon.
+The menu bar app has to be running for the widgets to update. It does **not**
+add itself to your login items — turn that on yourself with **Launch at Login**
+in the menu bar icon, which is also where you quit it.
 
 ### Fitting text to a widget
 

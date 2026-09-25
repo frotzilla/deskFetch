@@ -24,7 +24,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
-        registerLaunchAtLoginIfNeeded()
         server.start()
         setupStatusItem()
         refresh()
@@ -56,16 +55,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         item.menu = menu
         statusItem = item
-    }
-
-    private func registerLaunchAtLoginIfNeeded() {
-        let status = SMAppService.mainApp.status
-        guard status != .enabled, status != .requiresApproval else { return }
-        do {
-            try SMAppService.mainApp.register()
-        } catch {
-            FileHandle.standardError.write("Failed to register login item: \(error)\n".data(using: .utf8)!)
-        }
     }
 
     @objc private func toggleLaunchAtLogin() {
@@ -111,10 +100,45 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    /// Locations fastfetch commonly lives, since an app launched from Finder
+    /// gets a minimal PATH that won't include Homebrew, MacPorts or Nix.
+    /// Override with:
+    ///   defaults write com.redwanh.deskfetch fastfetchPath /path/to/fastfetch
+    private static let fastfetchPath: String? = {
+        let fileManager = FileManager.default
+
+        if let override = UserDefaults.standard.string(forKey: "fastfetchPath"),
+           fileManager.isExecutableFile(atPath: override) {
+            return override
+        }
+
+        var candidates = [
+            "/opt/homebrew/bin/fastfetch",                      // Homebrew, Apple silicon
+            "/usr/local/bin/fastfetch",                         // Homebrew, Intel
+            "/opt/local/bin/fastfetch",                         // MacPorts
+            "/run/current-system/sw/bin/fastfetch",             // nix-darwin
+            "/usr/bin/fastfetch",
+        ]
+        if let home = ProcessInfo.processInfo.environment["HOME"] {
+            candidates.append(home + "/.nix-profile/bin/fastfetch")
+            candidates.append(home + "/.local/bin/fastfetch")
+        }
+        if let path = ProcessInfo.processInfo.environment["PATH"] {
+            candidates.append(contentsOf: path.split(separator: ":").map { $0 + "/fastfetch" })
+        }
+        return candidates.first { fileManager.isExecutableFile(atPath: $0) }
+    }()
+
     private static func runFastfetch(arguments: [String]) -> String {
-        let candidates = ["/opt/homebrew/bin/fastfetch", "/usr/local/bin/fastfetch"]
-        guard let path = candidates.first(where: { FileManager.default.isExecutableFile(atPath: $0) }) else {
-            return "fastfetch not found. Install it with: brew install fastfetch"
+        guard let path = fastfetchPath else {
+            return """
+            fastfetch not found.
+
+            Install it with:  brew install fastfetch
+
+            If it's installed somewhere unusual:
+            defaults write com.redwanh.deskfetch fastfetchPath /path/to/fastfetch
+            """
         }
 
         let langValue = "\(Locale.current.identifier).UTF-8"
