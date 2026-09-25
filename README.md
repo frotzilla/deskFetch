@@ -30,7 +30,7 @@ and Extra Large show your full module list.
 ## Install
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/deskFetch.git
+git clone https://github.com/frotzilla/deskFetch.git
 cd deskFetch
 DEVELOPMENT_TEAM=XXXXXXXXXX ./build.sh --install
 ```
