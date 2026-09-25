@@ -9,6 +9,8 @@ resize, and arrange like any other macOS widget.
 It reads your own `~/.config/fastfetch/config.jsonc`, so the modules and logo
 colors match exactly what you see in your terminal.
 
+![deskFetch widgets on the desktop](docs/hero.png)
+
 ## Widgets
 
 | Widget | Shows | Sizes |
@@ -19,6 +21,13 @@ colors match exactly what you see in your terminal.
 
 Small and Medium show a compact set (OS, host, uptime, memory, battery). Large
 and Extra Large show your full module list.
+
+![The three widgets at Large](docs/widgets.png)
+
+The same widget at Small, Medium and Large. Note the jump from the compact set
+to the full module list:
+
+![deskFetch at Small, Medium and Large](docs/sizes.png)
 
 ## Requirements
 
@@ -40,6 +49,8 @@ value in parentheses.
 
 Then right-click the desktop -> **Edit Widgets** -> search **deskFetch**, and drag
 the ones you want.
+
+![deskFetch in the widget gallery](docs/gallery.png)
 
 macOS caches the widget gallery aggressively. If a widget or a size doesn't
 appear, remove and re-add it; if that fails, log out and back in.
